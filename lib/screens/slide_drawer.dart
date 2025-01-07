@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
+//import 'package:hexcolor/hexcolor.dart';
 
 class CustomDrawerWidget extends StatefulWidget {
   const CustomDrawerWidget({super.key});
@@ -19,7 +19,7 @@ class CustomDrawerWidgetState extends State<CustomDrawerWidget> {
         children: <Widget>[
           Container(
             alignment: Alignment.center,
-            color: HexColor('#BA4949'),
+            color: Colors.deepPurple,
             padding: const EdgeInsets.symmetric(vertical: 40.0),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.center,
