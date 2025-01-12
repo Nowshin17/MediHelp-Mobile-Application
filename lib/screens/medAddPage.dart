@@ -14,13 +14,12 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
   final List<String> medicineTypes = [
-    'Tablet',
-    'Syrup',
-    'Injection',
-    'Capsule'
+    'Once a day',
+    'Twice a day',
+    'Thrice a day',
+    'more'
   ];
   String? selectedMedicineType;
-
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   Future<void> _pickImage() async {
@@ -107,13 +106,6 @@ class _MedAppPageState extends State<MedAppPage> {
                 ),
               ),
 
-              // TextField(
-              //   controller: imgController,
-              //   decoration: const InputDecoration(
-              //     labelText: 'Image URL (optional)',
-              //     border: OutlineInputBorder(),
-              //   ),
-              // ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {},
