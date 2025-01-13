@@ -14,10 +14,10 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
   final List<String> medicineTypes = [
-    'Once a day',
-    'Twice a day',
-    'Thrice a day',
-    'more'
+    'Tablet',
+    'Serup',
+    'Injection',
+    'Other'
   ];
   String? selectedMedicineType;
   File? _selectedImage;
@@ -27,7 +27,7 @@ class _MedAppPageState extends State<MedAppPage> {
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+       // _selectedImage = File(pickedFile.path);
       });
     }
   }
@@ -54,7 +54,7 @@ class _MedAppPageState extends State<MedAppPage> {
 
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
-                  labelText: 'Dose',
+                  labelText: 'Medicine Type',
                   border: OutlineInputBorder(),
                 ),
                 value: selectedMedicineType,

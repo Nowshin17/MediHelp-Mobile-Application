@@ -13,19 +13,19 @@ class _HomeScreenMedState extends State<HomeScreenMed> {
   final List<Map<String, dynamic>> medicines = [
     {
       'name': 'Paracetamol fsgdfsdgfedfdgdfgh  gfdghfdg dfhgdhfdhfdh ',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Fimage&psig=AOvVaw08jgg8mCEmiiETlqxF_R1f&ust=1736885560344000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDWp4fB84oDFQAAAAAdAAAAABAE',
       'dose': 'Once a daily',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Ibuprofen',
-      'img': 'https://via.placeholder.com/100',
+      'img': '',
       'dose': 'Twice a day',
       'icon': Icons.local_pharmacy,
     },
     {
       'name': 'Amoxicillin',
-      'img': 'https://via.placeholder.com/100',
+      'img': '',
       'dose': 'Twice a day',
       'icon': Icons.healing,
     },
