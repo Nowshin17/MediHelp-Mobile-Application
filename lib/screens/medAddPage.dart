@@ -15,18 +15,7 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
-  final List<String> medicineTypes = [
-    'Tablet',
-    'Syrup',
-    'Injection',
-    'Others'
-  ];
-  final List<String> frequencyData = [
-    'Evdryday',
-    'Syrup',
-    'Injection',
-    'Others'
-  ];
+
   String? selectedMedicineType;
   String? selectedFrequency;
   File? _selectedImage;
@@ -66,7 +55,7 @@ class _MedAppPageState extends State<MedAppPage> {
                   border: OutlineInputBorder(),
                 ),
                 value: selectedMedicineType,
-                items: medicineTypes.map((type) {
+                items: ArraysConst.medicineTypes.map((type) {
                   return DropdownMenuItem(
                     value: type,
                     child: Text(type),
@@ -85,7 +74,7 @@ class _MedAppPageState extends State<MedAppPage> {
                   border: OutlineInputBorder(),
                 ),
                 value: selectedFrequency,
-                items: ArraysConst.medicineTypes.map((type) {
+                items: ArraysConst.frequencyData.map((type) {
                   return DropdownMenuItem(
                     value: type,
                     child: Text(type),
