@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
+import '../constant/text_constant/const_arrays.dart';
+
 class MedAppPage extends StatefulWidget {
   const MedAppPage({super.key});
 
@@ -13,13 +15,9 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
-  final List<String> medicineTypes = [
-    'Once a day',
-    'Twice a day',
-    'Thrice a day',
-    'more'
-  ];
+
   String? selectedMedicineType;
+  String? selectedFrequency;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   Future<void> _pickImage() async {
@@ -27,7 +25,7 @@ class _MedAppPageState extends State<MedAppPage> {
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+       // _selectedImage = File(pickedFile.path);
       });
     }
   }
@@ -51,14 +49,13 @@ class _MedAppPageState extends State<MedAppPage> {
                 ),
               ),
               const SizedBox(height: 16),
-
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
-                  labelText: 'Dose',
+                  labelText: 'Medicine Type',
                   border: OutlineInputBorder(),
                 ),
                 value: selectedMedicineType,
-                items: medicineTypes.map((type) {
+                items: ArraysConst.medicineTypes.map((type) {
                   return DropdownMenuItem(
                     value: type,
                     child: Text(type),
@@ -71,6 +68,25 @@ class _MedAppPageState extends State<MedAppPage> {
                 },
               ),
               const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Frequency',
+                  border: OutlineInputBorder(),
+                ),
+                value: selectedFrequency,
+                items: ArraysConst.frequencyData.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedFrequency = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
               TextField(
                 controller: doseController,
                 decoration: const InputDecoration(
@@ -78,7 +94,6 @@ class _MedAppPageState extends State<MedAppPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: _pickImage,

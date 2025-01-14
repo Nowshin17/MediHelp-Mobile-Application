@@ -13,67 +13,67 @@ class _HomeScreenMedState extends State<HomeScreenMed> {
   final List<Map<String, dynamic>> medicines = [
     {
       'name': 'Paracetamol fsgdfsdgfedfdgdfgh  gfdghfdg dfhgdhfdhfdh ',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': 'Once a daily',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Ibuprofen',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
       'icon': Icons.local_pharmacy,
     },
     {
       'name': 'Amoxicillin',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
       'icon': Icons.healing,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
     {
       'name': 'Paracetamol',
-      'img': 'https://via.placeholder.com/100',
+      'img': 'https://picsum.photos/200/300',
       'dose': '500mg',
       'icon': Icons.medical_services,
     },
@@ -130,7 +130,9 @@ class _HomeScreenMedState extends State<HomeScreenMed> {
                               imageUrl,
                               height: 50, // Constrain height
                               width: 50,  // Constrain width
-                             fit: BoxFit.cover, // Ensure the image fits within bounds
+                             fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                              return Image.network(defaultImage, fit: BoxFit.cover);} // Use fallback// Ensure the image fits within bounds
                             ),
                           ),
                         ),
