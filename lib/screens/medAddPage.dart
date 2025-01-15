@@ -21,8 +21,7 @@ class _MedAppPageState extends State<MedAppPage> {
   String? selectedFrequency;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
-
-  String? dropdownValue; // For the new dropdown in the row
+  String? dropdownValue;
 
   List<String> options = ["Morning", "Lunch", "Night"];
   List<bool> isChecked = [false, false, false];
@@ -146,7 +145,7 @@ class _MedAppPageState extends State<MedAppPage> {
                 runSpacing: 8.0, // Vertical spacing
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     child: DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         labelText: 'select',
@@ -171,7 +170,7 @@ class _MedAppPageState extends State<MedAppPage> {
                     child: TextField(
                       controller: doseController,
                       decoration: const InputDecoration(
-                        labelText: 'Text Field',
+                        labelText: 'Dose',
                         border: OutlineInputBorder(),
                       ),
                     ),
