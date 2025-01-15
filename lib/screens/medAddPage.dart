@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-
 import '../constant/text_constant/const_arrays.dart';
 
 class MedAppPage extends StatefulWidget {
@@ -16,16 +15,35 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
 
+  final TextEditingController timeController = TextEditingController();
+
   String? selectedMedicineType;
   String? selectedFrequency;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
+
+  String? dropdownValue; // For the new dropdown in the row
+
+  List<String> options = ["Morning", "Lunch", "Night"];
+  List<bool> isChecked = [false, false, false];
+  final List<String> dropdownItems = ["Before BRK", "After BRK"];
+
   Future<void> _pickImage() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-       // _selectedImage = File(pickedFile.path);
+        // _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (pickedTime != null) {
+      setState(() {
+        timeController.text = pickedTime.format(context);
       });
     }
   }
@@ -87,13 +105,92 @@ class _MedAppPageState extends State<MedAppPage> {
                 },
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: doseController,
-                decoration: const InputDecoration(
-                  labelText: 'Time',
-                  border: OutlineInputBorder(),
-                ),
+
+              const Text(
+                "Select Time:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 10.0, // Space between checkboxes horizontally
+                runSpacing: 10.0, // Space between checkboxes vertically
+                children: List.generate(options.length, (index) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Checkbox(
+                        value: isChecked[index],
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isChecked[index] = value!;
+                          });
+                          List<String> selectedOptions = [];
+                          for (int i = 0; i < options.length; i++) {
+                            if (isChecked[i]) {
+                              selectedOptions.add(options[i]);
+                              print(selectedOptions);
+                            }
+                          }
+                        },
+                      ),
+                      Text(options[index]),
+                    ],
+                  );
+                }),
+              ),
+
+              const SizedBox(height: 16),
+
+              Wrap(
+                spacing: 8.0, // Horizontal spacing
+                runSpacing: 8.0, // Vertical spacing
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'select',
+                        border: OutlineInputBorder(),
+                      ),
+                      //value: dropdownValue,
+                      items: dropdownItems.map((item) {
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownValue = value;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    child: TextField(
+                      controller: doseController,
+                      decoration: const InputDecoration(
+                        labelText: 'Text Field',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: TextField(
+                      controller: timeController,
+                      readOnly: true,
+                      onTap: () => _selectTime(context),
+                      decoration: const InputDecoration(
+                        labelText: 'Time',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: _pickImage,
@@ -123,7 +220,15 @@ class _MedAppPageState extends State<MedAppPage> {
 
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // List<String> selectedOptions = [];
+                  // for (int i = 0; i < options.length; i++) {
+                  //   if (isChecked[i]) {
+                  //     selectedOptions.add(options[i]);
+                  //     print(selectedOptions);
+                  //   }
+                  // }
+                },
                 child: const Text('Add Medicine'),
               ),
             ],
