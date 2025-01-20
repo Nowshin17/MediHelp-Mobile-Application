@@ -14,18 +14,50 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
-
   final TextEditingController timeController = TextEditingController();
 
-  String? selectedMedicineType;
-  String? selectedFrequency;
+  String? selectedMedicineType = ArraysConst.medicineTypes.first;
+  String? selectedFrequency = ArraysConst.frequencyData.first;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   String? dropdownValue;
 
-  List<String> options = ["Morning", "Lunch", "Night"];
+
   List<bool> isChecked = [false, false, false];
   final List<String> dropdownItems = ["Before BRK", "After BRK"];
+
+
+  // Options for meal timing
+  List<String> options = ["Morning", "Noon", "Night"];
+  List<String> selectedOptions = [];
+  Map<String, bool> selectedPeriods = {
+    "Morning": false,
+    "Noon": false,
+    "Night": false,
+  };
+
+  // Dropdown options for Before/After Meal
+  List<String> mealOptions = ["Before Meal", "After Meal"];
+
+  // Map<String, TimeOfDay?> timeTracker = {
+  //   "Morning": null,
+  //   "Noon": null,
+  //   "Night": null,
+  // };
+
+  Map<String, TimeOfDay?> timeTracker = {
+  };
+
+  // Method to select time for a specific period
+  Future<void> _selectTime(String period) async {
+    final TimeOfDay? pickedTime =
+    await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if (pickedTime != null) {
+      setState(() {
+        timeTracker[period] = pickedTime;
+      });
+    }
+  }
 
   Future<void> _pickImage() async {
     final XFile? pickedFile =
@@ -33,16 +65,6 @@ class _MedAppPageState extends State<MedAppPage> {
     if (pickedFile != null) {
       setState(() {
         // _selectedImage = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if (pickedTime != null) {
-      setState(() {
-        timeController.text = pickedTime.format(context);
       });
     }
   }
@@ -123,9 +145,9 @@ class _MedAppPageState extends State<MedAppPage> {
                           setState(() {
                             isChecked[index] = value!;
                           });
-                          List<String> selectedOptions = [];
                           for (int i = 0; i < options.length; i++) {
                             if (isChecked[i]) {
+
                               selectedOptions.add(options[i]);
                               print(selectedOptions);
                             }
@@ -139,56 +161,46 @@ class _MedAppPageState extends State<MedAppPage> {
               ),
 
               const SizedBox(height: 16),
-
-              Wrap(
-                spacing: 8.0, // Horizontal spacing
-                runSpacing: 8.0, // Vertical spacing
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        labelText: 'select',
-                        border: OutlineInputBorder(),
-                      ),
-                      //value: dropdownValue,
-                      items: dropdownItems.map((item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          dropdownValue = value;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    child: TextField(
-                      controller: doseController,
-                      decoration: const InputDecoration(
-                        labelText: 'Dose',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: TextField(
-                      controller: timeController,
-                      readOnly: true,
-                      onTap: () => _selectTime(context),
-                      decoration: const InputDecoration(
-                        labelText: 'Time',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
+              const Text(
+                "Set Times:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
+              const SizedBox(height: 8),
+              // ListView.builder(
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   itemCount: selectedOptions.length,
+              //   itemBuilder: (context, index) {
+              //     String period = timeTracker.keys.elementAt(index);
+              //     return Padding(
+              //       padding: const EdgeInsets.only(bottom: 16.0),
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Text(
+              //             period,
+              //             style: const TextStyle(fontSize: 16),
+              //           ),
+              //           TextButton(
+              //             onPressed: () => _selectTime(period),
+              //             child: Text(
+              //               timeTracker[period]?.format(context) ?? "Set Time",
+              //               style: TextStyle(
+              //                 color: timeTracker[period] != null
+              //                     ? Colors.black
+              //                     : Colors.grey,
+              //               ),
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     );
+              //   },
+              // ),
+
+
+
+
 
               const SizedBox(height: 16),
               GestureDetector(
