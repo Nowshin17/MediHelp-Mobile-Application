@@ -11,4 +11,8 @@ mixin ArraysConst {
     'Every X Days',
     'Day of the Week'
   ];
+  static List<String> mealTime = [
+    'Before Time',
+    'After Meal',
+  ];
 }

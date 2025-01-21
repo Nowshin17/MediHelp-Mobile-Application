@@ -18,18 +18,18 @@ class _MedAppPageState extends State<MedAppPage> {
 
   String? selectedMedicineType = ArraysConst.medicineTypes.first;
   String? selectedFrequency = ArraysConst.frequencyData.first;
+  String? selectedMealTime = ArraysConst.mealTime.first;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   String? dropdownValue;
 
-
   List<bool> isChecked = [false, false, false];
   final List<String> dropdownItems = ["Before BRK", "After BRK"];
-
-
+  bool _isChecked = false;
   // Options for meal timing
   List<String> options = ["Morning", "Noon", "Night"];
   List<String> selectedOptions = [];
+  bool isVisible = true;
   Map<String, bool> selectedPeriods = {
     "Morning": false,
     "Noon": false,
@@ -39,25 +39,19 @@ class _MedAppPageState extends State<MedAppPage> {
   // Dropdown options for Before/After Meal
   List<String> mealOptions = ["Before Meal", "After Meal"];
 
-  // Map<String, TimeOfDay?> timeTracker = {
-  //   "Morning": null,
-  //   "Noon": null,
-  //   "Night": null,
-  // };
-
-  Map<String, TimeOfDay?> timeTracker = {
-  };
+  Map<String, TimeOfDay?> timeTracker = {};
+  TimeOfDay? _selectedTime;
 
   // Method to select time for a specific period
-  Future<void> _selectTime(String period) async {
-    final TimeOfDay? pickedTime =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now());
-    if (pickedTime != null) {
-      setState(() {
-        timeTracker[period] = pickedTime;
-      });
-    }
-  }
+  // Future<void> _selectTime(String period) async {
+  //   final TimeOfDay? pickedTime =
+  //       await showTimePicker(context: context, initialTime: TimeOfDay.now());
+  //   if (pickedTime != null) {
+  //     setState(() {
+  //       timeTracker[period] = pickedTime;
+  //     });
+  //   }
+  // }
 
   Future<void> _pickImage() async {
     final XFile? pickedFile =
@@ -126,7 +120,6 @@ class _MedAppPageState extends State<MedAppPage> {
                 },
               ),
               const SizedBox(height: 16),
-
               const Text(
                 "Select Time:",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -147,10 +140,15 @@ class _MedAppPageState extends State<MedAppPage> {
                           });
                           for (int i = 0; i < options.length; i++) {
                             if (isChecked[i]) {
-
                               selectedOptions.add(options[i]);
                               print(selectedOptions);
                             }
+
+                            print("jjjj$selectedOptions[0]");
+
+                            // if(selectedOptions = "Moring"){
+                            //   isVisible = true;
+                            // }
                           }
                         },
                       ),
@@ -159,49 +157,257 @@ class _MedAppPageState extends State<MedAppPage> {
                   );
                 }),
               ),
-
               const SizedBox(height: 16),
-              const Text(
-                "Set Times:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              Visibility(
+                visible: isVisible,
+                child: Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(color: Colors.grey),
+                  //   borderRadius: BorderRadius.circular(5),
+                  // ),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Morning",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 4),
+                      GestureDetector(
+                        onTap: () async {
+                          TimeOfDay? pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              _selectedTime = pickedTime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            _selectedTime != null
+                                ? _selectedTime!.format(context)
+                                : "Select Time",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Meal',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: selectedMealTime,
+                        items: ArraysConst.mealTime.map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMealTime = value;
+                          });
+                        },
+                      ),
+                      // TextButton(
+                      //   onPressed: () => _selectTime(period),
+                      //   child: Text(
+                      //     timeTracker[period]?.format(context) ?? "Set Time",
+                      //     style: TextStyle(
+                      //       color: timeTracker[period] != null
+                      //           ? Colors.black
+                      //           : Colors.grey,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-              // ListView.builder(
-              //   shrinkWrap: true,
-              //   physics: const NeverScrollableScrollPhysics(),
-              //   itemCount: selectedOptions.length,
-              //   itemBuilder: (context, index) {
-              //     String period = timeTracker.keys.elementAt(index);
-              //     return Padding(
-              //       padding: const EdgeInsets.only(bottom: 16.0),
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             period,
-              //             style: const TextStyle(fontSize: 16),
-              //           ),
-              //           TextButton(
-              //             onPressed: () => _selectTime(period),
-              //             child: Text(
-              //               timeTracker[period]?.format(context) ?? "Set Time",
-              //               style: TextStyle(
-              //                 color: timeTracker[period] != null
-              //                     ? Colors.black
-              //                     : Colors.grey,
-              //               ),
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     );
-              //   },
-              // ),
-
-
-
-
-
+              Visibility(
+                visible: isVisible,
+                child: Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(color: Colors.grey),
+                  //   borderRadius: BorderRadius.circular(5),
+                  // ),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Noon",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 4),
+                      GestureDetector(
+                        onTap: () async {
+                          TimeOfDay? pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              _selectedTime = pickedTime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            _selectedTime != null
+                                ? _selectedTime!.format(context)
+                                : "Select Time",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Meal',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: selectedMealTime,
+                        items: ArraysConst.mealTime.map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMealTime = value;
+                          });
+                        },
+                      ),
+                      // TextButton(
+                      //   onPressed: () => _selectTime(period),
+                      //   child: Text(
+                      //     timeTracker[period]?.format(context) ?? "Set Time",
+                      //     style: TextStyle(
+                      //       color: timeTracker[period] != null
+                      //           ? Colors.black
+                      //           : Colors.grey,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: isVisible,
+                child: Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(color: Colors.grey),
+                  //   borderRadius: BorderRadius.circular(5),
+                  // ),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Night",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 4),
+                      GestureDetector(
+                        onTap: () async {
+                          TimeOfDay? pickedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (pickedTime != null) {
+                            setState(() {
+                              _selectedTime = pickedTime;
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            _selectedTime != null
+                                ? _selectedTime!.format(context)
+                                : "Select Time",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          labelText: 'Meal',
+                          border: OutlineInputBorder(),
+                        ),
+                        value: selectedMealTime,
+                        items: ArraysConst.mealTime.map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMealTime = value;
+                          });
+                        },
+                      ),
+                      // TextButton(
+                      //   onPressed: () => _selectTime(period),
+                      //   child: Text(
+                      //     timeTracker[period]?.format(context) ?? "Set Time",
+                      //     style: TextStyle(
+                      //       color: timeTracker[period] != null
+                      //           ? Colors.black
+                      //           : Colors.grey,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Checkbox(
+                value: _isChecked,
+                onChanged: (value) {
+                  setState(() {
+                    _isChecked = value!; // Update the state when checkbox is toggled
+                  });
+                },
+              ),
+              Text(
+                _isChecked ? "Checked" : "Unchecked",
+                style: TextStyle(fontSize: 18),
+              ),
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: _pickImage,
@@ -228,7 +434,6 @@ class _MedAppPageState extends State<MedAppPage> {
                         ),
                 ),
               ),
-
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
