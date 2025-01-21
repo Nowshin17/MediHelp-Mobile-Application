@@ -396,17 +396,22 @@ class _MedAppPageState extends State<MedAppPage> {
                 ),
               ),
               const SizedBox(height: 16),
+              const Text(
+                "Set Reminder:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
               Checkbox(
                 value: _isChecked,
                 onChanged: (value) {
                   setState(() {
-                    _isChecked = value!; // Update the state when checkbox is toggled
+                    _isChecked =
+                        value!; // Update the state when checkbox is toggled
                   });
                 },
               ),
               Text(
-                _isChecked ? "Checked" : "Unchecked",
-                style: TextStyle(fontSize: 18),
+                _isChecked ? "Notification On" : "Notification Off",
+                style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
               GestureDetector(
