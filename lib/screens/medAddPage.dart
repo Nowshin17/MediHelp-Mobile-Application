@@ -410,7 +410,7 @@ class _MedAppPageState extends State<MedAppPage> {
                 },
               ),
               Text(
-                _isChecked ? "Notification On" : "Notification Off",
+                _isChecked ? "Notification is On" : "Notification is Off",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
