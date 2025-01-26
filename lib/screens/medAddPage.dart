@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import '../constant/text_constant/const_arrays.dart';
+import '../model/medicineData.dart';
 
 class MedAppPage extends StatefulWidget {
   const MedAppPage({super.key});
@@ -15,15 +16,16 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
-  TextEditingController textController = TextEditingController();
+  TextEditingController textControllerofDay = TextEditingController();
+  TextEditingController textControllerOfweek = TextEditingController();
 
   String? selectedMedicineType = ArraysConst.medicineTypes.first;
   String? selectedFrequency = ArraysConst.frequencyData.first;
   String? selectedMealTime = ArraysConst.mealTime.first;
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
-  String? dropdownValue;
-  String? nValue = '';
+  int? nValueOfDay = 0;
+  int? nValueOfWeek = 0;
 
   List<bool> isChecked = [false, false, false];
   bool _isChecked = false;
@@ -34,23 +36,18 @@ class _MedAppPageState extends State<MedAppPage> {
   bool isVisibleMorning = false;
   TimeOfDay? _selectedTime;
 
-  // Method to select time for a specific period
-  // Future<void> _selectTime(String period) async {
-  //   final TimeOfDay? pickedTime =
-  //       await showTimePicker(context: context, initialTime: TimeOfDay.now());
-  //   if (pickedTime != null) {
-  //     setState(() {
-  //       timeTracker[period] = pickedTime;
-  //     });
-  //   }
-  // }
+  Map<String, Map<String, dynamic>> selectedTimes = {
+    "Morning": {"time": null, "meal": null},
+    "Noon": {"time": null, "meal": null},
+    "Night": {"time": null, "meal": null},
+  };
 
   Future<void> _pickImage() async {
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        // _selectedImage = File(pickedFile.path);
+         _selectedImage = File(pickedFile.path);
       });
     }
   }
@@ -110,40 +107,88 @@ class _MedAppPageState extends State<MedAppPage> {
                     selectedFrequency = value;
                     print(selectedFrequency);
                   });
-                  if(selectedFrequency == "Every N Day"){
+                  if(selectedFrequency == 'Every N Days'){
 
-                  }
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text("Enter the N Value"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min, // Ensures the dialog doesn't take unnecessary space
-                          children: [
-                            const SizedBox(height: 10),
-                            TextField(
-                              controller: textController,
-                              decoration: const InputDecoration(
-                                labelText: "Enter value",
-                                border: OutlineInputBorder(),
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Enter the N Value Day"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min, // Ensures the dialog doesn't take unnecessary space
+                            children: [
+                              const SizedBox(height: 10),
+                              TextField(
+                                controller: textControllerofDay,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: "Enter value",
+                                  border: OutlineInputBorder(),
+                                ),
                               ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                nValueOfDay = int.tryParse(textControllerofDay.text);
+                                if (nValueOfDay == null) {
+                                  print("Invalid N Value");
+                                } else {
+                                  print("Entered Value: $nValueOfDay");
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              child: const Text("Save"),
                             ),
                           ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                               nValue = textController.text; // Get the entered text
-                              print("Entered Value: $nValue"); // Do something with it
-                              Navigator.of(context).pop(); // Close the popup
-                            },
-                            child: const Text("Ok"),
+                        );
+                      },
+                    );
+
+                  }
+
+                  if(selectedFrequency == 'Day of the Week'){
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Enter the N Value of Week"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min, // Ensures the dialog doesn't take unnecessary space
+                            children: [
+                              const SizedBox(height: 10),
+                              TextField(
+                                controller: textControllerOfweek,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: "Enter value",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      );
-                    },
-                  );
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                nValueOfWeek = int.tryParse(textControllerOfweek.text);
+                                if (nValueOfWeek == null) {
+                                  print("Invalid N Value");
+                                } else {
+                                  print("Entered Value: $nValueOfWeek");
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              child: const Text("Save"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                  }
+
                 },
               ),
               const SizedBox(height: 16),
@@ -170,6 +215,7 @@ class _MedAppPageState extends State<MedAppPage> {
                             if (isChecked[i]) {
                               if (!selectedOptions.contains(options[i])) {
                                 selectedOptions.add(options[i]);
+
 
                                 if (options[i].toString() == "Morning") {
                                   setState(() {
@@ -202,6 +248,7 @@ class _MedAppPageState extends State<MedAppPage> {
                               }
                             }
                           }
+                          print(selectedOptions);
                         },
                       ),
                       Text(options[index]),
@@ -450,8 +497,19 @@ class _MedAppPageState extends State<MedAppPage> {
               ElevatedButton(
                 onPressed: () {
                   print(nameController);
-                  print("$selectedFrequency $selectedMedicineType $nValue");
+                  print("$selectedFrequency $selectedMedicineType $nValueOfDay");
                   print("Time: $selectedOptions");
+
+                  final medicine = Medicine(
+                    name: nameController.text,
+                    medicineType: selectedMedicineType!,
+                    frequency: selectedFrequency!,
+                   // nValue: nValue? ?? true ? null : nValue,
+                    selectedTimes: selectedOptions,
+                    isNotificationOn: _isChecked,
+                    imagePath: _selectedImage?.path,
+                  );
+                  print("Medicine Data: ${medicine.toJson()}");
 
 
                   // List<String> selectedOptions = [];
