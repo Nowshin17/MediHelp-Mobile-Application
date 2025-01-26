@@ -15,6 +15,7 @@ class _MedAppPageState extends State<MedAppPage> {
   final TextEditingController doseController = TextEditingController();
   final TextEditingController imgController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
+  TextEditingController textController = TextEditingController();
 
   String? selectedMedicineType = ArraysConst.medicineTypes.first;
   String? selectedFrequency = ArraysConst.frequencyData.first;
@@ -22,24 +23,15 @@ class _MedAppPageState extends State<MedAppPage> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   String? dropdownValue;
+  String? nValue = '';
 
   List<bool> isChecked = [false, false, false];
-  final List<String> dropdownItems = ["Before BRK", "After BRK"];
   bool _isChecked = false;
-  // Options for meal timing
   List<String> options = ["Morning", "Noon", "Night"];
   List<String> selectedOptions = [];
-  bool isVisible = true;
-  Map<String, bool> selectedPeriods = {
-    "Morning": false,
-    "Noon": false,
-    "Night": false,
-  };
-
-  // Dropdown options for Before/After Meal
-  List<String> mealOptions = ["Before Meal", "After Meal"];
-
-  Map<String, TimeOfDay?> timeTracker = {};
+  bool isVisibleNoon = false;
+  bool isVisibleNight = false;
+  bool isVisibleMorning = false;
   TimeOfDay? _selectedTime;
 
   // Method to select time for a specific period
@@ -116,7 +108,42 @@ class _MedAppPageState extends State<MedAppPage> {
                 onChanged: (value) {
                   setState(() {
                     selectedFrequency = value;
+                    print(selectedFrequency);
                   });
+                  if(selectedFrequency == "Every N Day"){
+
+                  }
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Enter the N Value"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min, // Ensures the dialog doesn't take unnecessary space
+                          children: [
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: textController,
+                              decoration: const InputDecoration(
+                                labelText: "Enter value",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                               nValue = textController.text; // Get the entered text
+                              print("Entered Value: $nValue"); // Do something with it
+                              Navigator.of(context).pop(); // Close the popup
+                            },
+                            child: const Text("Ok"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 16),
@@ -138,17 +165,42 @@ class _MedAppPageState extends State<MedAppPage> {
                           setState(() {
                             isChecked[index] = value!;
                           });
+
                           for (int i = 0; i < options.length; i++) {
                             if (isChecked[i]) {
-                              selectedOptions.add(options[i]);
-                              print(selectedOptions);
+                              if (!selectedOptions.contains(options[i])) {
+                                selectedOptions.add(options[i]);
+
+                                if (options[i].toString() == "Morning") {
+                                  setState(() {
+                                    isVisibleMorning = true;
+                                  });
+                                } else if (options[i].toString() == "Noon") {
+                                  setState(() {
+                                    isVisibleNoon = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isVisibleNight = true;
+                                  });
+                                }
+                              }
+                            } else {
+                              selectedOptions.remove(options[i]);
+                              if (options[i].toString() == "Morning") {
+                                setState(() {
+                                  isVisibleMorning = false;
+                                });
+                              } else if (options[i].toString() == "Noon") {
+                                setState(() {
+                                  isVisibleNoon = false;
+                                });
+                              } else {
+                                setState(() {
+                                  isVisibleNight = false;
+                                });
+                              }
                             }
-
-                            print("jjjj$selectedOptions[0]");
-
-                            // if(selectedOptions = "Moring"){
-                            //   isVisible = true;
-                            // }
                           }
                         },
                       ),
@@ -159,13 +211,9 @@ class _MedAppPageState extends State<MedAppPage> {
               ),
               const SizedBox(height: 16),
               Visibility(
-                visible: isVisible,
+                visible: isVisibleMorning,
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 8),
-                  // decoration: BoxDecoration(
-                  //   border: Border.all(color: Colors.grey),
-                  //   borderRadius: BorderRadius.circular(5),
-                  // ),
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -222,29 +270,14 @@ class _MedAppPageState extends State<MedAppPage> {
                           });
                         },
                       ),
-                      // TextButton(
-                      //   onPressed: () => _selectTime(period),
-                      //   child: Text(
-                      //     timeTracker[period]?.format(context) ?? "Set Time",
-                      //     style: TextStyle(
-                      //       color: timeTracker[period] != null
-                      //           ? Colors.black
-                      //           : Colors.grey,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
               ),
               Visibility(
-                visible: isVisible,
+                visible: isVisibleNoon,
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 8),
-                  // decoration: BoxDecoration(
-                  //   border: Border.all(color: Colors.grey),
-                  //   borderRadius: BorderRadius.circular(5),
-                  // ),
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -301,29 +334,14 @@ class _MedAppPageState extends State<MedAppPage> {
                           });
                         },
                       ),
-                      // TextButton(
-                      //   onPressed: () => _selectTime(period),
-                      //   child: Text(
-                      //     timeTracker[period]?.format(context) ?? "Set Time",
-                      //     style: TextStyle(
-                      //       color: timeTracker[period] != null
-                      //           ? Colors.black
-                      //           : Colors.grey,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
               ),
               Visibility(
-                visible: isVisible,
+                visible: isVisibleNight,
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 8),
-                  // decoration: BoxDecoration(
-                  //   border: Border.all(color: Colors.grey),
-                  //   borderRadius: BorderRadius.circular(5),
-                  // ),
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -380,17 +398,6 @@ class _MedAppPageState extends State<MedAppPage> {
                           });
                         },
                       ),
-                      // TextButton(
-                      //   onPressed: () => _selectTime(period),
-                      //   child: Text(
-                      //     timeTracker[period]?.format(context) ?? "Set Time",
-                      //     style: TextStyle(
-                      //       color: timeTracker[period] != null
-                      //           ? Colors.black
-                      //           : Colors.grey,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -442,6 +449,11 @@ class _MedAppPageState extends State<MedAppPage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
+                  print(nameController);
+                  print("$selectedFrequency $selectedMedicineType $nValue");
+                  print("Time: $selectedOptions");
+
+
                   // List<String> selectedOptions = [];
                   // for (int i = 0; i < options.length; i++) {
                   //   if (isChecked[i]) {

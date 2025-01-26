@@ -8,11 +8,13 @@ mixin ArraysConst {
   ];
   static List<String> frequencyData = [
     'Every Day',
-    'Every X Days',
+    'Every N Days',
     'Day of the Week'
   ];
   static List<String> mealTime = [
     'Before Time',
     'After Meal',
   ];
+
+
 }
