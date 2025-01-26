@@ -27,13 +27,13 @@ class _HomeScreenMedState extends State<HomeScreenMed> {
       'name': 'Amoxicillin',
       'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
-      'icon': Icons.healing,
+      'icon': Icons.check_circle,
     },
     {
       'name': 'Paracetamol',
       'img': 'https://picsum.photos/200/300',
       'dose': 'Twice a day',
-      'icon': Icons.medical_services,
+      'icon': Icons.check_rounded,
     },
     {
       'name': 'Paracetamol',
